@@ -19,7 +19,11 @@ Lanzar las siguientes queries:
 - Obtener los libros editados en 1998 o en 2005
 
       db.libros.aggregate([
-        {$match:{"anyo":{$in:["2005","1998"]}}}
+        {$match:
+            {"anyo":
+                  {$in:["2005","1998"]}
+            }
+        }
       ])
 
 - Obtener el número de libros de la editorial Addison‐Wesley
@@ -49,7 +53,7 @@ Lanzar las siguientes queries:
       db.libros.aggregate([
         {
            $addFields: {
-              yearInt: { $toInt: "$anyo" },
+              yearInt: { $toInt: "$anyo" }
            }
         },
         {$match:{
@@ -63,7 +67,7 @@ Lanzar las siguientes queries:
       db.libros.aggregate([
         {
            $addFields: {
-              yearInt: { $toInt: "$anyo" },
+              yearInt: { $toInt: "$anyo" }
            }
         },
         {
@@ -81,7 +85,7 @@ Lanzar las siguientes queries:
       db.libros.aggregate([
         {
            $addFields: {
-              yearInt: { $toInt: "$anyo" },
+              yearInt: { $toInt: "$anyo" }
            }
         },
         {
@@ -115,7 +119,7 @@ Lanzar las siguientes queries:
       db.libros.aggregate([
         {
            $addFields: {
-              yearInt: { $toInt: "$anyo" },
+              yearInt: { $toInt: "$anyo" }
            }
         },
         {
