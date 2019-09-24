@@ -6,7 +6,8 @@ Lanzar las siguientes queries:
 - Obtener todos los autores
 
       db.libros.aggregate([
-        {$group:{_id:{"autor":"$autor.apellidos","nombre":"$autor.nombre"}}}
+        { $unwind : "$autor" },
+        { $group:{_id:{"autor":"$autor.apellidos","nombre":"$autor.nombre"}} }
       ])
 
 - Obtener los autores cuyo apellido sea DATE
