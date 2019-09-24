@@ -422,5 +422,116 @@ db.lista_libreria.aggregate([
                 }
             ]
         }
+  // listas 1998 y +2005
+  db.lista_libreria.aggregate([
+        { $match: { $or: [
+            { "anyo":  { $eq: "1998"}},
+            { "anyo": { $gte: "2005"}}]}
+        },
+            {$group: { _id: "$anyo",
+                 count: { $sum: 1},
+                 titulo: { $addToSet: "$titulo"},
+                 autor: { $addToSet: "$autor"}}}
+        ]);
+   /* 1 */
+{
+        "_id" : "2005",
+        "count" : 1.0,
+        "titulo" : [ 
+            "Introducci�n a las Bases de Datos"
+        ],
+        "autor" : [ 
+            {
+                "apellidos" : "Pons",
+                "nombre" : "O."
+            }
+        ]
+    }
     
-
+    /* 2 */
+    {
+        "_id" : "2007",
+        "count" : 1.0,
+        "titulo" : [ 
+            "Fundamentos de Sistemas de Bases de Datos"
+        ],
+        "autor" : [ 
+            {
+                "apellidos" : "ELMASRI,",
+                "nombre" : "R.A."
+            }
+        ]
+    }
+    
+    /* 3 */
+    {
+        "_id" : "2011",
+        "count" : 1.0,
+        "titulo" : [ 
+            "Fundamentos de Sistemas de Bases de Datos"
+        ],
+        "autor" : [ 
+            {
+                "apellidos" : "ELMASRI,",
+                "nombre" : "R.A."
+            }
+        ]
+    }
+    
+    /* 4 */
+    {
+        "_id" : "2010",
+        "count" : 1.0,
+        "titulo" : [ 
+            "Bases de Datos"
+        ],
+        "autor" : [ 
+            [ 
+                {
+                    "apellidos" : "Alonso",
+                    "nombre" : "S."
+                }, 
+                {
+                    "apellidos" : "Alarcon",
+                    "nombre" : "P."
+                }, 
+                {
+                    "apellidos" : "Bollain",
+                    "nombre" : "M."
+                }
+            ]
+        ]
+    }
+    
+    /* 5 */
+    {
+        "_id" : "1998",
+        "count" : 1.0,
+        "titulo" : [ 
+            "Bases de Datos"
+        ],
+        "autor" : [ 
+            [ 
+                {
+                    "apellidos" : "Santos",
+                    "nombre" : "E."
+                }, 
+                {
+                    "apellidos" : "Garcia",
+                    "nombre" : "A."
+                }, 
+                {
+                    "apellidos" : "Alonso",
+                    "nombre" : "S."
+                }, 
+                {
+                    "apellidos" : "Alarcon",
+                    "nombre" : "P."
+                }, 
+                {
+                    "apellidos" : "Garbajosa",
+                    "nombre" : "J."
+                }
+            ]
+        ]
+    }       
