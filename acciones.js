@@ -288,4 +288,139 @@ db.lista_libreria.distinct( "titulo", {  "precio": { $gt: 50 } } )
         "Introducci�n a las Bases de Datos"
 ]// devuelve los titulos +50, pero no me pide los titulos
 // y falta 2001
+// devolución CANTIDAD de libros 2001 +50
+
+db.lista_libreria.aggregate([
+        {$match: { $and: [ 
+            { "anyo": { $gte : "2001"}},
+            { "precio": { $gte : 50}}
+           ]
+          }
+         },
+         { $group: { _id: null, count: { $sum: 1 }}}
+         ]
+)  ;
+
+{
+        "_id" : null,
+        "count" : 3.0
+    }
+// devolucion con los titulos
+
+db.lista_libreria.aggregate([
+        {$match: { $and: [ 
+            { "anyo": { $gte : "2001"}},
+            { "precio": { $gte : 50}}
+           ]
+          }
+         },
+         { $group: { _id: null, 
+             count: { $sum: 1 },
+             titulo: { $addToSet : "$titulo"}}}
+         ]
+)  ;
+"_id" : null,
+"count" : 3.0,
+"titulo" : [ 
+    "Fundamentos de Sistemas de Bases de Datos", 
+    "Introducci�n a los Sistemas de Bases de Datos ", 
+    "Introducci�n a las Bases de Datos"
+]
+}
+// libros editorial Addison-Wesley despues ($gt) 2005
+
+db.lista_libreria.aggregate([
+        {$match: { $and: [
+            { "anyo": {$gt: "2005"}},
+            { "editorial": "Addison-Wesley"}
+            ]
+            }
+            },
+            {$group: { _id: null,
+                count: { $sum: 1},
+                titulo: { $addToSet: "$titulo"}}}
+        ] 
+             );
+/* 1 */
+{
+        "_id" : null,
+        "count" : 2.0,
+        "titulo" : [ 
+            "Fundamentos de Sistemas de Bases de Datos"
+        ]
+    }
+// título de libro y editorial para aquellos libros que tengan un precio superior a 50€
+
+db.lista_libreria.aggregate([
+        { $match: { "precio": { $gt: 50}
+            }
+            }
+        ,
+            { $group: { _id: null,
+                count: { $sum: 1},
+                titulo: { $addToSet: "$titulo"},
+                editorial: { $addToSet: "$editorial"}}}
+       ] 
+  );
+/* 1 */
+{
+        "_id" : null,
+        "count" : 2.0,
+        "titulo" : [ 
+            "Introducci�n a los Sistemas de Bases de Datos ", 
+            "Introducci�n a las Bases de Datos"
+        ],
+        "editorial" : [ 
+            "Thomson", 
+            "Addison-Wesley"
+        ]
+    }
+
+// encuentra lista 2005 
+db.lista_libreria.aggregate([
+{ $match: { $and: [
+    { "anyo": { $gt: "2005"}},
+    ]
+    }
+    },
+    {$group: { _id: null,
+         count: { $sum: 1},
+         titulo: { $addToSet: "$titulo"},
+         autor: { $addToSet: "$autor"}}}
+]);
+/* 1 */
+{
+        "_id" : null,
+        "count" : 4.0,
+        "titulo" : [ 
+            "Fundamentos de Sistemas de Bases de Datos", 
+            "Bases de Datos", 
+            "Introducci�n a las Bases de Datos"
+        ]
+        "autor" : [ 
+                {
+                    "apellidos" : "ELMASRI,",
+                    "nombre" : "R.A."
+                }, 
+                [ 
+                    {
+                        "apellidos" : "Alonso",
+                        "nombre" : "S."
+                    }, 
+                    {
+                        "apellidos" : "Alarcon",
+                        "nombre" : "P."
+                    }, 
+                    {
+                        "apellidos" : "Bollain",
+                        "nombre" : "M."
+                    }
+                ], 
+                {
+                    "apellidos" : "Pons",
+                    "nombre" : "O."
+                }
+            ]
+        }
+    
 
