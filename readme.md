@@ -9,6 +9,18 @@ Lanzar las siguientes queries:
         { $unwind : "$autor" },
         { $group:{_id:{"autor":"$autor.apellidos","nombre":"$autor.nombre"}} }
       ])
+      
+      db.libros.aggregate(
+          {$unwind : "$autor"},   
+          {$group: {
+              _id : {"autor":{ $concat: [ "$autor.apellidos", ", ", "$autor.nombre" ] }}
+          }},
+          {$group: {
+              _id : "count",
+              total : {"$sum" : 1},
+              distinctValues : {$addToSet : "$_id"}
+          }}
+      )
 
 - Obtener los autores cuyo apellido sea DATE
 
@@ -49,6 +61,18 @@ Lanzar las siguientes queries:
         }
       ])
       
+      db.libros.aggregate(
+          {$unwind : "$autor"},   
+          {$group: {
+              _id : {"titulo":{ $concat: [ "$autor.apellidos", ", ", "$autor.nombre", " - ", "$titulo" ] }}
+          }},
+          {$group: {
+              _id : "count",
+              total : {"$sum" : 1},
+              distinctValues : {$addToSet : "$_id"}
+          }}
+      );
+      
 - Obtener los títulos de libro publicados con posterioridad a 2004.
 
       db.libros.aggregate([
@@ -59,6 +83,12 @@ Lanzar las siguientes queries:
         },
         {$match:{
           yearInt:{$gt:2004}
+          }
+        },
+	  {$project:
+          {
+            _id:0,
+            libro:"$titulo"
           }
         }
       ])
