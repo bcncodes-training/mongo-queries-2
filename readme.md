@@ -174,6 +174,8 @@ Lanzar las siguientes queries:
         {$match:{ num_ediciones: { $not:{$eq:1} }}}
       ])
       
+  pasandolo por funcion de `javascript`
+  
       let libros=db.libros.aggregate([
         {$group:{_id:"$titulo",num_ediciones:{$sum:1}}},
         {$match:{ num_ediciones: { $gt:1 }}}
