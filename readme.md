@@ -75,6 +75,8 @@ Lanzar las siguientes queries:
       
 - Obtener los títulos de libro publicados con posterioridad a 2004.
 
+      db.libros.find({anyo:{$gt:"2004"}},{_id:0,titulo:1}).pretty()
+
       db.libros.aggregate([
         {
            $addFields: {
@@ -85,7 +87,7 @@ Lanzar las siguientes queries:
           yearInt:{$gt:2004}
           }
         },
-	  {$project:
+	{$project:
           {
             _id:0,
             libro:"$titulo"
@@ -94,6 +96,8 @@ Lanzar las siguientes queries:
       ])
       
 - Obtener los libros editados desde 2001 y precio mayor que 50
+
+      db.libros.find({"precio":{$gt:50}},{"titulo":1,"editorial":1,"_id":0})
 
       db.libros.aggregate([
         {
@@ -162,3 +166,16 @@ Lanzar las siguientes queries:
           }
         }
       ])
+    
+- Obtener por cada libro el titulo y el numero de ediciones
+
+      db.libros.aggregate([
+        {$group:{_id:"$titulo",num_ediciones:{$sum:1}}},
+        {$match:{ num_ediciones: { $not:{$eq:1} }}}
+      ])
+      
+      let libros=db.libros.aggregate([
+        {$group:{_id:"$titulo",num_ediciones:{$sum:1}}},
+        {$match:{ num_ediciones: { $gt:1 }}}
+      ])     
+      libros.forEach((miDoc)=>{print(`titulo:${miDoc._id}| num. ediciones:${miDoc.num_ediciones}`)})
