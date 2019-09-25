@@ -40,7 +40,7 @@ db.lista_libreria.find({}).pretty()
 
 // enseñar sólo apellidos DATE
 
-db.lista_libreria.find({"autor.apellidos" : "DATE"}).pretty()
+db.lista_libreria.find({"autor.apellidos" : "DATE"}, {"autor": 1, _id:0}).pretty()
 
 // años 1998 o 2005
 
@@ -111,6 +111,7 @@ db.lista_libreria.find({"_id": ObjectId("5d876787f6a13ccd5ee7015b")}).pretty()
         "anyo" : "2005",
         "precio" : 100.25
 }
+db.lista_libreria.find().limit(1).skip(2).pretty()//correcto
 
 // acceder a un campo sin escribir su valor
 // el problema es que me devuelve todos los datos
@@ -194,7 +195,7 @@ db.lista_libreria.aggregate( [ { $group: { _id : 0, titulo : { $addToSet: "$titu
 }
 // libros con posteriodidad al 2004
 
-db.lista_libreria.find({"anyo" : { $gte : "2004" }} ).pretty()
+db.lista_libreria.find({"anyo" : { $gte : "2004" }}, {"titulo":1, "_id":0} ).pretty()
 {
         "_id" : ObjectId("5d876787f6a13ccd5ee70159"),
         "titulo" : "Fundamentos de Sistemas de Bases de Datos",
@@ -328,7 +329,6 @@ db.lista_libreria.aggregate([
 ]
 }
 // libros editorial Addison-Wesley despues ($gt) 2005
-
 db.lista_libreria.aggregate([
         {$match: { $and: [
             { "anyo": {$gt: "2005"}},
@@ -535,3 +535,23 @@ db.lista_libreria.aggregate([
             ]
         ]
     }       
+//titulo, editorial 
+db.lista_libreria.aggregate([
+
+    {$group:{ _id:"$titulo", num_ediciones:{$sum:1}}},
+    {$match:
+        {"num_ediciones":{$gt:1}}
+    }
+])
+
+//pintar
+
+let libros = db.libros.aggregate([
+
+    {$group:{ _id:"$titulo", num_ediciones:{$sum:1}}},
+    {$match:
+        {"num_ediciones":{$gt:1}}
+    }
+])
+
+libros.forEach
